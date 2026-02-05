@@ -21,6 +21,7 @@ function ChatContainer() {
   useEffect(() => {
     getMessagesByUserId(selectedUser._id);
     subscribeToMessages();
+
     return () => unsubscribeFromMessages();
   }, [
     selectedUser,
@@ -36,18 +37,18 @@ function ChatContainer() {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
+    <>
       <ChatHeader />
-      <div className="flex-1 px-6 py-8 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900">
+      <div className="flex-1 px-6 overflow-y-auto py-8">
         {messages.length > 0 && !isMessagesLoading ? (
           <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((msg) => (
               <div
                 key={msg._id}
-                className={`flex ${msg.senderId === authUser._id ? "justify-end" : "justify-start"}`}
+                className={`chat ${msg.senderId === authUser._id ? "chat-end" : "chat-start"}`}
               >
                 <div
-                  className={`relative rounded-2xl p-4 shadow-md max-w-xs sm:max-w-sm md:max-w-md ${
+                  className={`chat-bubble relative ${
                     msg.senderId === authUser._id
                       ? "bg-cyan-600 text-white"
                       : "bg-slate-800 text-slate-200"
@@ -57,20 +58,20 @@ function ChatContainer() {
                     <img
                       src={msg.image}
                       alt="Shared"
-                      className="rounded-xl h-48 w-full object-cover mb-2"
+                      className="rounded-lg h-48 object-cover"
                     />
                   )}
-                  {msg.text && <p className="whitespace-pre-wrap">{msg.text}</p>}
-                  <p className="text-xs mt-2 opacity-70 text-right">
+                  {msg.text && <p className="mt-2">{msg.text}</p>}
+                  <p className="text-xs mt-1 opacity-75 flex items-center gap-1">
                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                   </p>
-                  <div className="absolute -bottom-1 right-2 w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
                 </div>
               </div>
             ))}
+
             <div ref={messageEndRef} />
           </div>
         ) : isMessagesLoading ? (
@@ -79,10 +80,9 @@ function ChatContainer() {
           <NoChatHistoryPlaceholder name={selectedUser.fullname} />
         )}
       </div>
-      <div className="bg-slate-900 border-t border-slate-700">
-        <MessageInput />
-      </div>
-    </div>
+
+      <MessageInput />
+    </>
   );
 }
 
