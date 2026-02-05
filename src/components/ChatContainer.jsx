@@ -21,7 +21,6 @@ function ChatContainer() {
   useEffect(() => {
     getMessagesByUserId(selectedUser._id);
     subscribeToMessages();
-
     return () => unsubscribeFromMessages();
   }, [
     selectedUser,
@@ -37,18 +36,18 @@ function ChatContainer() {
   }, [messages]);
 
   return (
-    <>
+    <div className="flex flex-col h-full w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-100">
       <ChatHeader />
-      <div className="flex-1 px-6 overflow-y-auto py-8">
+      <div className="flex-1 px-6 py-8 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900">
         {messages.length > 0 && !isMessagesLoading ? (
           <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((msg) => (
               <div
                 key={msg._id}
-                className={`chat ${msg.senderId === authUser._id ? "chat-end" : "chat-start"}`}
+                className={`flex ${msg.senderId === authUser._id ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`chat-bubble relative ${
+                  className={`relative rounded-2xl p-4 shadow-md w-full max-w-[80%] break-words ${
                     msg.senderId === authUser._id
                       ? "bg-cyan-600 text-white"
                       : "bg-slate-800 text-slate-200"
@@ -58,11 +57,11 @@ function ChatContainer() {
                     <img
                       src={msg.image}
                       alt="Shared"
-                      className="rounded-lg h-48 object-cover"
+                      className="rounded-xl h-48 w-full object-cover mb-2"
                     />
                   )}
-                  {msg.text && <p className="mt-2 w-full">{msg.text}</p>}
-                  <p className="text-xs mt-1 opacity-75 flex items-center gap-1">
+                  {msg.text && <p className="whitespace-pre-wrap break-words">{msg.text}</p>}
+                  <p className="text-xs mt-2 opacity-70 text-right">
                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -71,7 +70,6 @@ function ChatContainer() {
                 </div>
               </div>
             ))}
-
             <div ref={messageEndRef} />
           </div>
         ) : isMessagesLoading ? (
@@ -80,9 +78,10 @@ function ChatContainer() {
           <NoChatHistoryPlaceholder name={selectedUser.fullname} />
         )}
       </div>
-
-      <MessageInput />
-    </>
+      <div className="bg-slate-900 border-t border-slate-700">
+        <MessageInput />
+      </div>
+    </div>
   );
 }
 
