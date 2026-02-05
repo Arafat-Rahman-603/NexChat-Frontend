@@ -40,14 +40,14 @@ function ChatContainer() {
       <ChatHeader />
       <div className="flex-1 px-6 py-8 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900">
         {messages.length > 0 && !isMessagesLoading ? (
-          <div className="max-w-3xl mx-auto space-y-4">
+          <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((msg) => (
               <div
                 key={msg._id}
                 className={`flex ${msg.senderId === authUser._id ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`relative rounded-2xl p-3 shadow-md inline-block max-w-[80%] ${
+                  className={`relative rounded-2xl p-4 shadow-md max-w-xs sm:max-w-sm md:max-w-md ${
                     msg.senderId === authUser._id
                       ? "bg-cyan-600 text-white"
                       : "bg-slate-800 text-slate-200"
@@ -60,13 +60,14 @@ function ChatContainer() {
                       className="rounded-xl h-48 w-full object-cover mb-2"
                     />
                   )}
-                  {msg.text && <p className="whitespace-pre-wrap break-words">{msg.text}</p>}
-                  <p className="text-xs mt-1 opacity-70 text-right">
+                  {msg.text && <p className="whitespace-pre-wrap">{msg.text}</p>}
+                  <p className="text-xs mt-2 opacity-70 text-right">
                     {new Date(msg.createdAt).toLocaleTimeString(undefined, {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                   </p>
+                  <div className="absolute -bottom-1 right-2 w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
                 </div>
               </div>
             ))}
